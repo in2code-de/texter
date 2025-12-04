@@ -1,0 +1,2 @@
+# cat=basic; type=string; label=Gemini API Key: Enter your Google Gemini API key
+geminiApiKey =
