@@ -47,12 +47,16 @@ class AiTextPlugin extends Plugin {
     init() {
         const editor = this.editor;
 
+        // Define icons
+        const magicIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M6.215 15.873c-1.49.454-2.652 1.619-3.107 3.107-.456-1.489-1.62-2.653-3.108-3.108 1.488-.454 2.652-1.618 3.106-3.106.456 1.487 1.619 2.651 3.109 3.107zm-2.491-14.15c-.826-.252-1.472-.897-1.723-1.723-.252.825-.897 1.471-1.722 1.723.823.252 1.469.898 1.722 1.722.251-.825.897-1.471 1.723-1.722zm1.837 2.182l.732.732c1.631-1.359 3.789-2.329 5.729-2.337-1.833.458-3.645 1.663-4.947 3.12l1.653 1.653c3.76-4.365 10.845-5.486 15.272-3.073-6.549-5.092-14.585-3.287-18.439-.095zm-1.747 1.082l3.536 3.535 12.664 12.652-2.826 2.826-16.203-16.185 2.829-2.828zm-.002 1.412l-1.414 1.415 3.537 3.537 1.415-1.414-3.538-3.538zm6.408 2.123c1.005.307 1.794 1.095 2.101 2.101.307-1.005 1.096-1.793 2.101-2.101-1.005-.308-1.794-1.095-2.101-2.101-.307 1.007-1.096 1.794-2.101 2.101z"/></svg>`;
+        const spinnerIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } .spinner { animation: spin 1s linear infinite; transform-origin: center; }</style><circle class="spinner" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`;
+
         editor.ui.componentFactory.add('aiTextGenerator', locale => {
             const view = new ButtonView(locale);
 
             view.set({
                 label: 'AI Text generieren',
-                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M6.215 15.873c-1.49.454-2.652 1.619-3.107 3.107-.456-1.489-1.62-2.653-3.108-3.108 1.488-.454 2.652-1.618 3.106-3.106.456 1.487 1.619 2.651 3.109 3.107zm-2.491-14.15c-.826-.252-1.472-.897-1.723-1.723-.252.825-.897 1.471-1.722 1.723.823.252 1.469.898 1.722 1.722.251-.825.897-1.471 1.723-1.722zm1.837 2.182l.732.732c1.631-1.359 3.789-2.329 5.729-2.337-1.833.458-3.645 1.663-4.947 3.12l1.653 1.653c3.76-4.365 10.845-5.486 15.272-3.073-6.549-5.092-14.585-3.287-18.439-.095zm-1.747 1.082l3.536 3.535 12.664 12.652-2.826 2.826-16.203-16.185 2.829-2.828zm-.002 1.412l-1.414 1.415 3.537 3.537 1.415-1.414-3.538-3.538zm6.408 2.123c1.005.307 1.794 1.095 2.101 2.101.307-1.005 1.096-1.793 2.101-2.101-1.005-.308-1.794-1.095-2.101-2.101-.307 1.007-1.096 1.794-2.101 2.101z"/></svg>`,
+                icon: magicIcon,
                 withText: false,
                 tooltip: 'AI Text generieren'
             });
@@ -60,6 +64,11 @@ class AiTextPlugin extends Plugin {
             view.on('execute', () => {
                 const currentText = editor.getData();
                 const pageId = this.getPageId();
+
+                // Set loading state
+                view.isEnabled = false;
+                view.icon = spinnerIcon;
+                view.label = 'AI Text wird generiert...';
 
                 fetch(TYPO3.settings.ajaxUrls.texter_process_text, {
                     method: 'POST',
@@ -84,6 +93,13 @@ class AiTextPlugin extends Plugin {
                 })
                 .catch(error => {
                     console.error('AJAX Error:', error);
+                    alert('Fehler bei der Kommunikation mit der AI.');
+                })
+                .finally(() => {
+                    // Restore normal state
+                    view.isEnabled = true;
+                    view.icon = magicIcon;
+                    view.label = 'AI Text generieren';
                 });
             });
 
