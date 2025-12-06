@@ -7,6 +7,34 @@ class AiTextPlugin extends Plugin {
         return 'AiTextPlugin';
     }
 
+    /**
+     * Convert plain text with line breaks to HTML format
+     * - Double line breaks (\n\n) become paragraphs
+     * - Single line breaks (\n) become <br> tags
+     */
+    convertTextToHtml(text) {
+        if (!text) return '';
+
+        // Split by double line breaks to create paragraphs
+        const paragraphs = text.split(/\n\n+/);
+
+        // Process each paragraph
+        const htmlParagraphs = paragraphs
+            .map(para => {
+                // Skip empty paragraphs
+                if (!para.trim()) return '';
+
+                // Convert single line breaks to <br> tags
+                const withBreaks = para.replace(/\n/g, '<br>');
+
+                // Wrap in paragraph tags
+                return `<p>${withBreaks}</p>`;
+            })
+            .filter(para => para !== ''); // Remove empty paragraphs
+
+        return htmlParagraphs.join('');
+    }
+
     init() {
         const editor = this.editor;
 
@@ -37,8 +65,11 @@ class AiTextPlugin extends Plugin {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        // Convert plain text line breaks to HTML format
+                        const formattedHtml = this.convertTextToHtml(data.text);
+
                         // Replace editor content with processed text
-                        editor.setData(data.text);
+                        editor.setData(formattedHtml);
                         console.log('Text processed successfully from LLM');
                     } else {
                         console.error('Error processing text:', data.error || 'Unknown error');
