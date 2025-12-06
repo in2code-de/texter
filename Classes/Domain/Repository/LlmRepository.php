@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace In2code\Texter\Domain\Repository;
 
+use In2code\Texter\Domain\Service\ConversationHistory;
 use In2code\Texter\Exception\ApiException;
 use In2code\Texter\Exception\ConfigurationException;
 use In2code\Texter\Utility\ConfigurationUtility;
@@ -16,45 +17,26 @@ class LlmRepository
 
     public function __construct(
         private readonly RequestFactory $requestFactory,
+        private readonly ConversationHistory $conversationHistory,
     ) {
         $this->apiKey = getenv('GOOGLE_API_KEY') ?: ConfigurationUtility::getConfigurationByKey('apiKey') ?: '';
     }
 
-    public function getText(string $prompt): string
+    public function getText(string $prompt, string $pageId = '0'): string
     {
         $this->checkApiKey();
-        return $this->connectToLlm($prompt);
+        $history = $this->conversationHistory->getHistory($pageId);
+        $this->conversationHistory->addUserMessage($history, $this->extendPrompt($prompt));
+        $response = $this->connectToLlm($history);
+        $this->conversationHistory->addModelResponse($history, $response);
+        $this->conversationHistory->saveHistory($history, $pageId);
+        return $response;
     }
 
-    /**
-     * List available models for debugging
-     */
-    public function listModels(): array
-    {
-        $this->checkApiKey();
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models?key=' . $this->apiKey;
-
-        try {
-            $response = $this->requestFactory->request($url, 'GET');
-            $data = json_decode($response->getBody()->getContents(), true);
-            return $data['models'] ?? [];
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    protected function connectToLlm(string $prompt): string
+    protected function connectToLlm(array $conversationHistory): string
     {
         $payload = [
-            'contents' => [
-                [
-                    'parts' => [
-                        [
-                            'text' => $this->extendPrompt($prompt),
-                        ],
-                    ],
-                ],
-            ],
+            'contents' => $conversationHistory,
             'generationConfig' => [
                 'temperature' => 0.7,
                 'maxOutputTokens' => 8192,
@@ -92,7 +74,11 @@ class LlmRepository
 
     protected function extendPrompt(string $prompt): string
     {
-        return $prompt;
+        $prefix = ConfigurationUtility::getConfigurationByKey('promptPrefix');
+        if ($prefix !== '') {
+            $prefix .= PHP_EOL;
+        }
+        return $prefix . $prompt;
     }
 
     protected function getApiUrl(): string

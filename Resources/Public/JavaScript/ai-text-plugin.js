@@ -8,6 +8,15 @@ class AiTextPlugin extends Plugin {
     }
 
     /**
+     * Get the current page ID from the URL
+     * TYPO3 backend URLs contain id=XXX parameter
+     */
+    getPageId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('id') || '0';
+    }
+
+    /**
      * Convert plain text with line breaks to HTML format
      * - Double line breaks (\n\n) become paragraphs
      * - Single line breaks (\n) become <br> tags
@@ -49,26 +58,23 @@ class AiTextPlugin extends Plugin {
             });
 
             view.on('execute', () => {
-                // Get current editor content
                 const currentText = editor.getData();
+                const pageId = this.getPageId();
 
-                // Send AJAX request to Backend Route
                 fetch(TYPO3.settings.ajaxUrls.texter_process_text, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        text: currentText
+                        text: currentText,
+                        pageId: pageId
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Convert plain text line breaks to HTML format
                         const formattedHtml = this.convertTextToHtml(data.text);
-
-                        // Replace editor content with processed text
                         editor.setData(formattedHtml);
                         console.log('Text processed successfully from LLM');
                     } else {

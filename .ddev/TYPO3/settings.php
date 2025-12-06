@@ -45,6 +45,7 @@ return [
         ],
         'texter' => [
             'geminiApiKey' => '',
+            'promptPrefix' => '',
         ],
     ],
     'FE' => [
@@ -60,8 +61,6 @@ return [
     ],
     'GFX' => [
         'processor' => 'GraphicsMagick',
-        'processor_allowTemporaryMasksAsPng' => false,
-        'processor_colorspace' => 'RGB',
         'processor_effects' => false,
         'processor_enabled' => true,
         'processor_path' => '/usr/bin/',
@@ -122,7 +121,6 @@ return [
         'exceptionalErrors' => 12290,
         'features' => [
             'security.backend.enforceContentSecurityPolicy' => true,
-            'security.usePasswordPolicyForFrontendUsers' => true,
         ],
         'sitename' => 'texter',
         'systemMaintainers' => [
