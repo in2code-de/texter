@@ -1,2 +1,5 @@
-# cat=basic; type=string; label=Gemini API Key: Enter your Google Gemini API key
+# cat=basic//0010; type=text; label= Prompt prefix: Prefix text that should be always added to the prompt at the beginning
+promptPrefix =
+
+# cat=advanced//0100; type=string; label=Gemini API Key: Enter your Google Gemini API key
 geminiApiKey =
