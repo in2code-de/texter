@@ -29,9 +29,13 @@ Video image #4
 
 ## Installation
 
+### With composer
+
 ```
 composer req in2code/texter
 ```
+
+### Main configuration
 
 After that, you have to set some initial configuration in Extension Manager configuration:
 
@@ -44,6 +48,25 @@ Note: It's recommended to use ENV vars for in2code/imager instead of saving the 
 
 ```
 GOOGLE_API_KEY=your_api_key_from_google
+```
+
+### RTE configuration
+
+Per default, in2code/texter sets a default RTE configuration via Page TSConfig:
+
+```
+RTE.default.preset = texter
+```
+
+If you want to overrule this default setting, you can require in2code/texter in your sitepackage (to ensure that your
+extension is loaded after texter) and define a different default preset.
+Check file [Texter.yaml](Configuration/RTE/Texter.yaml) for an example how to add texter to your RTE configuration.
+
+**Hint** You can also use texter for selected RTE fields in backend. Example Page TSConfig:
+
+```
+RTE.config.tt_content.bodytext.preset = texter
+RTE.config.tx_news_domain_model_news.bodytext.preset = texter
 ```
 
 ## Changelog and breaking changes
