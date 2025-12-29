@@ -2,4 +2,4 @@
 promptPrefix =
 
 # cat=advanced//0100; type=string; label=Gemini API Key: Enter your Google Gemini API key
-geminiApiKey =
+apiKey =
