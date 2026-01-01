@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace In2code\Texter\Controller;
 
-use In2code\Texter\Domain\Repository\LlmRepository;
+use In2code\Texter\Domain\Repository\Llm\RepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\JsonResponse;
@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 class AjaxController
 {
     public function __construct(
-        protected readonly LlmRepository $llmRepository,
+        protected readonly RepositoryInterface $llmRepository,
     ) {
     }
 

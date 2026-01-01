@@ -10,5 +10,12 @@ services:
   In2code\Texter\Controller\AjaxController:
     public: true
 
-  In2code\Texter\Domain\Repository\LlmRepository:
+  In2code\Texter\Domain\Repository\Llm\:
+    resource: '../Classes/Domain/Repository/Llm/*.php'
+    exclude: '../Classes/Domain/Repository/Llm/{AbstractRepository.php,RepositoryInterface.php}'
     public: true
+
+  In2code\Texter\Domain\Repository\Llm\RepositoryInterface:
+    factory:
+      - '@In2code\Texter\Domain\Repository\Llm\LlmRepositoryFactory'
+      - 'create'

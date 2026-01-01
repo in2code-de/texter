@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace In2code\Texter\Domain\Repository;
+namespace In2code\Texter\Domain\Repository\Llm;
 
 use In2code\Texter\Domain\Service\ConversationHistory;
 use In2code\Texter\Exception\ApiException;
@@ -10,16 +10,29 @@ use In2code\Texter\Exception\ConfigurationException;
 use In2code\Texter\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Http\RequestFactory;
 
-class LlmRepository
+class GeminiRepository extends AbstractRepository implements RepositoryInterface
 {
     private string $apiKey = '';
     private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
     public function __construct(
-        private readonly RequestFactory $requestFactory,
-        private readonly ConversationHistory $conversationHistory,
+        protected RequestFactory $requestFactory,
+        protected ConversationHistory $conversationHistory,
     ) {
+        parent::__construct($requestFactory, $conversationHistory);
         $this->apiKey = getenv('GOOGLE_API_KEY') ?: ConfigurationUtility::getConfigurationByKey('apiKey') ?: '';
+    }
+
+    public function checkApiKey(): void
+    {
+        if ($this->apiKey === '') {
+            throw new ConfigurationException('Google API key not configured', 1764932074);
+        }
+    }
+
+    public function getApiUrl(): string
+    {
+        return $this->apiUrl;
     }
 
     public function getText(string $prompt, string $pageId = '0'): string
@@ -52,7 +65,7 @@ class LlmRepository
             'body' => json_encode($payload),
         ];
         $url = $this->getApiUrl() . '?key=' . $this->apiKey;
-        $response = $this->requestFactory->request($url, 'POST', $additionalOptions);
+        $response = $this->requestFactory->request($url, $this->requestMethod, $additionalOptions);
         if ($response->getStatusCode() !== 200) {
             throw new ApiException('Failed to generate text: ' . $response->getBody()->getContents(), 1764248401);
         }
@@ -70,26 +83,5 @@ class LlmRepository
         }
 
         throw new ApiException('No text content found in Gemini API response', 1764248403);
-    }
-
-    protected function extendPrompt(string $prompt): string
-    {
-        $prefix = ConfigurationUtility::getConfigurationByKey('promptPrefix');
-        if ($prefix !== '') {
-            $prefix .= PHP_EOL;
-        }
-        return $prefix . $prompt;
-    }
-
-    protected function getApiUrl(): string
-    {
-        return $this->apiUrl;
-    }
-
-    protected function checkApiKey(): void
-    {
-        if ($this->apiKey === '') {
-            throw new ConfigurationException('Google API key not configured', 1764932074);
-        }
     }
 }
