@@ -215,11 +215,11 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 ## Changelog and breaking changes
 
-| Version | Date       | State   | Description                                                 |
-|---------|------------|---------|-------------------------------------------------------------|
-| 2.1.0   | 2026-07-05 | Feature | Make gemini model overwriteable via ENV or extension settings |
-| 2.0.0   | 2025-01-01 | Feature | Add the possibility to extend texter with other AI services |
-| 1.0.0   | 2025-12-06 | Task    | Initial release of in2code/texter                           |
+| Version | Date       | State   | Description                                                    |
+|---------|------------|---------|----------------------------------------------------------------|
+| 3.0.0   | 2026-07-05 | Feature | Make gemini model overwriteable via ENV or extension settings  |
+| 2.0.0   | 2025-01-01 | Feature | Add the possibility to extend texter with other AI services    |
+| 1.0.0   | 2025-12-06 | Task    | Initial release of in2code/texter                              |
 
 
 
