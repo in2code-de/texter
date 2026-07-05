@@ -12,8 +12,9 @@ use TYPO3\CMS\Core\Http\RequestFactory;
 
 class GeminiRepository extends AbstractRepository implements RepositoryInterface
 {
-    private string $apiKey = '';
-    private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+    private string $apiKey;
+    private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+    private string $model;
 
     public function __construct(
         protected RequestFactory $requestFactory,
@@ -21,6 +22,7 @@ class GeminiRepository extends AbstractRepository implements RepositoryInterface
     ) {
         parent::__construct($requestFactory, $conversationHistory);
         $this->apiKey = getenv('GOOGLE_API_KEY') ?: ConfigurationUtility::getConfigurationByKey('apiKey') ?: '';
+        $this->model = ConfigurationUtility::getModel();
     }
 
     public function checkApiKey(): void
@@ -32,7 +34,7 @@ class GeminiRepository extends AbstractRepository implements RepositoryInterface
 
     public function getApiUrl(): string
     {
-        return $this->apiUrl;
+        return $this->apiUrl . $this->model;
     }
 
     public function getText(string $prompt, string $pageId = '0'): string

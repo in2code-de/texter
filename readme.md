@@ -49,15 +49,17 @@ composer req in2code/texter
 
 After that, you have to set some initial configuration in Extension Manager configuration:
 
-| Title         | Default value | Description                                                                                                                                          |
-|---------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| promptPrefix  | -             | Prefix text that should be always added to the prompt at the beginning                                                                               |
-| apiKey        | -             | Google Gemini API key. You can let this value empty and simply use ENV_VAR "GOOGLE_API_KEY" instead if you want to use CI pipelines for this setting |
+| Title         | Default value | Description                                                                                                                                             |
+|---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| promptPrefix  | -             | Prefix text that should be always added to the prompt at the beginning                                                                                  |
+| apiKey        | -             | Google Gemini API key. You can let this value empty and simply use ENV_VAR "GOOGLE_API_KEY" instead if you want to use CI pipelines for this setting    |
+| geminiModel   | -             | Gemini model. If empty the default model `gemini-2.5-flash:generateContent` is used. Add a specific model or use the `GOOGLE_GEMINI_MODEL` env variable |
 
 Note: It's recommended to use ENV vars for in2code/imager instead of saving the API-Key in Extension Manager configuration
 
 ```
 GOOGLE_API_KEY=your_api_key_from_google
+GOOGLE_GEMINI_MODEL=gemini-2.5-pro:generateContent
 ```
 
 ### RTE configuration
@@ -215,6 +217,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 | Version | Date       | State   | Description                                                 |
 |---------|------------|---------|-------------------------------------------------------------|
+| 2.1.0   | 2026-07-05 | Feature | Make gemini model overwriteable via ENV or extension settings |
 | 2.0.0   | 2025-01-01 | Feature | Add the possibility to extend texter with other AI services |
 | 1.0.0   | 2025-12-06 | Task    | Initial release of in2code/texter                           |
 
