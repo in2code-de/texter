@@ -53,7 +53,7 @@ After that, you have to set some initial configuration in Extension Manager conf
 |---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | promptPrefix  | -             | Prefix text that should be always added to the prompt at the beginning                                                                                  |
 | apiKey        | -             | Google Gemini API key. You can let this value empty and simply use ENV_VAR "GOOGLE_API_KEY" instead if you want to use CI pipelines for this setting    |
-| geminiModel   | -             | Gemini model. If empty the default model `gemini-2.5-flash:generateContent` is used. Add a specific model or use the `GOOGLE_GEMINI_MODEL` env variable |
+| geminiModel   | -             | Gemini model. If empty the default model `gemini-3.5-flash-lite:generateContent` is used. Add a specific model or use the `GOOGLE_GEMINI_MODEL` env variable |
 
 Note: It's recommended to use ENV vars for in2code/imager instead of saving the API-Key in Extension Manager configuration
 

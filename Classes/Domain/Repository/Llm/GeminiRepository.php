@@ -53,10 +53,9 @@ class GeminiRepository extends AbstractRepository implements RepositoryInterface
         $payload = [
             'contents' => $conversationHistory,
             'generationConfig' => [
-                'temperature' => 0.7,
                 'maxOutputTokens' => 8192,
                 'thinkingConfig' => [
-                    'thinkingBudget' => 0,
+                    'thinkingLevel' => 'minimal',
                 ],
             ],
         ];
