@@ -21,7 +21,7 @@ class GeminiRepository extends AbstractRepository implements RepositoryInterface
         protected ConversationHistory $conversationHistory,
     ) {
         parent::__construct($requestFactory, $conversationHistory);
-        $this->apiKey = getenv('GOOGLE_API_KEY') ?: ConfigurationUtility::getConfigurationByKey('apiKey') ?: '';
+        $this->apiKey = ConfigurationUtility::getApiKey();
         $this->model = ConfigurationUtility::getModel();
     }
 
@@ -55,7 +55,7 @@ class GeminiRepository extends AbstractRepository implements RepositoryInterface
             'generationConfig' => [
                 'maxOutputTokens' => 8192,
                 'thinkingConfig' => [
-                    'thinkingLevel' => 'minimal',
+                    'thinkingLevel' => ConfigurationUtility::getThinkingLevel(),
                 ],
             ],
         ];
