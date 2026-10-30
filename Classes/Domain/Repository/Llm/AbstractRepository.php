@@ -26,4 +26,10 @@ abstract class AbstractRepository
         }
         return $prefix . $prompt;
     }
+
+    protected function getErrorMessage(string $responseBody): string
+    {
+        $responseData = json_decode($responseBody, true);
+        return $responseData['error']['message'] ?? $responseBody;
+    }
 }
