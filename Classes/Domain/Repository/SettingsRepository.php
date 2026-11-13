@@ -6,9 +6,6 @@ namespace In2code\Texter\Domain\Repository;
 
 use TYPO3\CMS\Core\Registry;
 
-/**
- * Settings from the backend module "AI > Texter" are stored in sys_registry
- */
 class SettingsRepository
 {
     private const REGISTRY_NAMESPACE = 'tx_texter';

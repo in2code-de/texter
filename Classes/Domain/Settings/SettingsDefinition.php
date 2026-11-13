@@ -7,9 +7,6 @@ namespace In2code\Texter\Domain\Settings;
 use In2code\Texter\Domain\Model\Setting;
 use In2code\Texter\Utility\ConfigurationUtility;
 
-/**
- * All settings that can be overwritten in the backend module "AI > Texter"
- */
 class SettingsDefinition
 {
     /**
